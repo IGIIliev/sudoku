@@ -4,8 +4,6 @@ import { SudokuCellComponent } from './sudoku-cell/sudoku-cell.component';
 import { MatButtonModule } from '@angular/material/button';
 import { SudocuService } from '../../services/services/sudocu.service';
 import { SocketService } from '../../services/services/socket/socket.service';
-import * as complexityEnum from '../../../core/models/enums/complexityLevel.enum';
-import { map } from 'rxjs';
 import { SudokuCellModel } from '../../models/sudoku-cell.model';
 import { ActivatedRoute } from '@angular/router';
 
@@ -34,8 +32,9 @@ export class SudokuGridComponent {
   ngOnChanges() {
     // check if we ar in multiplayer mode and set socket data to the grid
     if (this.isMultyplayer) {
+      console.log(this.board(), this.socket.grid())
       this.board.set(this.socket.grid());
-      if (this.board()) this.generateSudokuData();
+      this.generateSudokuData();
     }
   }
 
@@ -57,8 +56,7 @@ export class SudokuGridComponent {
   }
 
   generateSudokuData(): void {
-    if (!this.isMultyplayer) { this.getBoard(this.dificalty!); console.log("generate"); }
-    if (!this.board()) { this.getBoard(this.dificalty!); console.log("generate", this.board()); }
+    this.getBoard(this.dificalty!)
     this.blocks = this.blocksToBoard(this.board().board);
 
   }
@@ -100,13 +98,17 @@ export class SudokuGridComponent {
       }
     }
 
-    console.log(board)
     return board;
   }
 
   private getBoard(difficulty: string): void {
     this.sudocuService.getBoard(difficulty).subscribe(res => {
-      this.board.set(res);
+      if (this.isMultyplayer && this.socket.grid().length != 0) {
+        this.board.set(this.socket.grid());
+      }
+      else {
+        this.board.set(res);
+      }
     });
   }
 

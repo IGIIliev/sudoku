@@ -1,5 +1,5 @@
-<!-- <mat-select class="cell" [value]="cellValue.value" [disabled]="cellValue.enabled"> -->
-<mat-select class="cell" [value]="cellValue.value" (selectionChange)="onSelectionChange($event.value)">
+<mat-select class="cell" [value]="cellValue.value == 0? '' : cellValue.value" [disabled]="!cellValue.enabled"
+  (selectionChange)="onSelectionChange($event.value)">
   @for (item of list; track item) {
   <mat-option [value]="item">{{item}}</mat-option>
   }

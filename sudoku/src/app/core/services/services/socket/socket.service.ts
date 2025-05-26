@@ -23,14 +23,6 @@ export class SocketService {
     return this._grid;
   }
 
-  listen<T>(eventName: string): Observable<T> {
-    return new Observable<T>(subscriber => {
-      this.socket.on(eventName, (data: T) => {
-        subscriber.next(data);
-      });
-    });
-  }
-
   constructor() {
     this.socket = io('http://localhost:3000'); // Adjust to your backend address
 
@@ -44,7 +36,6 @@ export class SocketService {
 
     this.socket.on('grid', (gridData) => {
       this._grid.set(gridData);
-      // this._grid.update(grid => [...grid, gridData]);
     });
 
     this.socket.on('gridHistory', (history: any[]) => {
