@@ -45,7 +45,6 @@ export class HomeComponent {
   }
 
   onDifficultyChange(value: complexityEnum.ComplexityEnum) {
-    console.log('Selected difficulty:', value);
     this.selectedDificalty = value;
   }
 }

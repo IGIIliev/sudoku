@@ -59,7 +59,6 @@ export class MultiplayerComponent {
   }
 
   sendMessage() {
-    console.log(this.currentRoom, this.user!, this.textMessage)
     if (this.textMessage.trim()) {
       this.socket.sendMessage(this.currentRoom, this.user!, this.textMessage);
       this.textMessage = '';
@@ -67,7 +66,6 @@ export class MultiplayerComponent {
   }
 
   loadGrid(event: any): void {
-    console.log("event: ", event)
     this.socket.updateGrid(event, this.currentRoom)
   }
 }

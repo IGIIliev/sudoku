@@ -32,9 +32,8 @@ export class SudokuGridComponent {
   ngOnChanges() {
     // check if we ar in multiplayer mode and set socket data to the grid
     if (this.isMultyplayer) {
-      console.log(this.board(), this.socket.grid())
       this.board.set(this.socket.grid());
-      this.generateSudokuData();
+      this.generateSudokuData(this.socket.grid().length == 0 ? true : false);
     }
   }
 
@@ -52,12 +51,11 @@ export class SudokuGridComponent {
     if (this.isMultyplayer) {
       this.gridGenerated.emit(this.board());
     }
-    console.log("updated: ", this.board());
   }
 
-  generateSudokuData(): void {
+  generateSudokuData(initialGeneration: boolean = false): void {
     this.getBoard(this.dificalty!)
-    this.blocks = this.blocksToBoard(this.board().board);
+    this.blocks = this.blocksToBoard(this.board().board, initialGeneration);
 
   }
 
@@ -75,7 +73,7 @@ export class SudokuGridComponent {
     // });
   }
 
-  blocksToBoard(blocks: number[][]): SudokuCellModel[][] {
+  blocksToBoard(blocks: number[][], initialGeneration: boolean = false): SudokuCellModel[][] {
     const board = Array.from({ length: 9 }, () => Array(9).fill(0));
 
     for (let blockIndex = 0; blockIndex < 9; blockIndex++) {
@@ -93,7 +91,7 @@ export class SudokuGridComponent {
           value: blocks[blockIndex][i],
           oldCoordinates: { x: blockIndex, y: i },
           newCoordinates: { x: row, y: col },
-          enabled: blocks[blockIndex][i] == 0 ? true : false
+          enabled: initialGeneration ? blocks[blockIndex][i] == 0 ? false : true : false
         };
       }
     }

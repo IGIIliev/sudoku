@@ -39,7 +39,6 @@ export class SocketService {
     });
 
     this.socket.on('gridHistory', (history: any[]) => {
-      console.log("history: ", history)
       this._grid.set(history);
     });
 
@@ -55,7 +54,6 @@ export class SocketService {
   }
 
   sendMessage(room: string, user: string, text: string) {
-    console.log('message', room, user, text)
     this.socket.emit('message', { room, user, text });
   }
 
