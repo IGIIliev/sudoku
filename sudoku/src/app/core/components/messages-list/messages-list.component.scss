@@ -1,0 +1,27 @@
+.igi-messages-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 16px;
+
+    .igi-message-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .igi-message-header {
+            margin: 4px;
+            color: gray;
+            border-bottom: 1px solid rgb(84, 199, 112);
+        }
+
+        .igi-message-text {
+            margin: 4px;
+        }
+    }
+
+    .mat-mdc-card {
+        margin: 4px;
+        padding: 8px;
+    }
+}

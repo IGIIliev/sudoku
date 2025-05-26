@@ -1,0 +1,45 @@
+<div class="igi-multiplayer-container">
+    <div class="igi-multiplayer-header">
+        <h2 class="title">Available Miltiplayer Game Room</h2>
+
+        <mat-list class="igi-multiplayer-list">
+            <mat-list-item *ngIf="socket.rooms().length == 0">
+                No game rooms available yet
+            </mat-list-item>
+            <mat-list-item *ngFor="let room of socket.rooms(); let i = index">
+                <div class="igi-multiplayer-items">
+                    <button mat-icon-button color="warn" (click)="deleteRoom(room)"><mat-icon>delete</mat-icon></button>
+                    <button mat-button (click)="join(room)">Join game: {{ room }}</button>
+                </div>
+            </mat-list-item>
+        </mat-list>
+
+        <mat-form-field class="igi-multiplayer-action">
+            <input matInput [(ngModel)]="newRoom" placeholder="New room name" />
+            <button matSuffix mat-icon-button (click)="createRoom()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </mat-form-field>
+    </div>
+    <div *ngIf="socket.checkForRoom(currentRoom)" style="display: flex; justify-content: center;">
+        <h1>Current selected room: {{currentRoom}}</h1>
+    </div>
+    <div *ngIf="socket.checkForRoom(currentRoom)" class="igi-multiplayer-room-area">
+
+        <div class="igi-multiplayer-sudoku-area">
+            <app-sudoku-grid [board]="socket.grid()" [currentRoom]="currentRoom" (gridGenerated)="loadGrid($event)" />
+        </div>
+        <div class="igi-multiplayer-messages-area">
+
+            <div class="igi-multiplayer-new-message">
+                <input [(ngModel)]="textMessage" placeholder="Type a message" class="igi-multiplayer-mesage-input" />
+                <button mat-icon-button (click)="sendMessage()">
+                    <mat-icon>send</mat-icon>
+                </button>
+            </div>
+            <div class="igi-multiplayer-messages-list">
+                <app-messages-list [user]="user" />
+            </div>
+        </div>
+    </div>
+</div>

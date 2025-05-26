@@ -1,0 +1,24 @@
+.igi-home-card {
+    display: flex;
+    max-width: 500px;
+    width: 100%;
+    align-items: center;
+    // position: absolute;
+    // left: 35%;
+    // top: 30%;
+
+    .igi-home--header {
+        margin: 50px;
+    }
+
+    .igi-home-actions-container {
+        display: flex;
+        flex-direction: column;
+        margin: 8px;
+        padding: 16px;
+    }
+
+    .mat-mdc-card-title {
+        font-size: -webkit-xxx-large;
+    }
+}

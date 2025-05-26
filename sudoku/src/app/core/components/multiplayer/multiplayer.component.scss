@@ -1,0 +1,69 @@
+.title {
+    margin: 48px;
+}
+
+.igi-multiplayer-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .igi-multiplayer-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+
+        .igi-multiplayer-list {
+            border: 2px solid rgb(84, 199, 112);
+            margin: 48px;
+            width: 380px;
+
+            .igi-multiplayer-items {
+                display: flex;
+
+            }
+        }
+
+        .igi-multiplayer-action {
+            margin: 0px 48px;
+            width: 380px;
+        }
+    }
+
+    .igi-multiplayer-room-area {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+
+        .igi-multiplayer-sudoku-area {
+            display: flex;
+        }
+
+        .igi-multiplayer-messages-area {
+            display: flex;
+            flex-direction: column;
+            padding: 48px;
+
+            .igi-multiplayer-new-message {
+                display: flex;
+                width: 100%;
+
+                .igi-multiplayer-mesage-input {
+                    border: none;
+                }
+            }
+
+            .igi-multiplayer-messages-list {
+                display: flex;
+                flex-direction: column;
+                height: 320px;
+                width: 250px;
+                border: 2px solid rgb(84, 199, 112);
+                border-radius: 8px;
+                overflow: auto;
+                margin-top: 18px;
+            }
+
+        }
+    }
+}

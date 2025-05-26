@@ -1,0 +1,41 @@
+<div style="display: flex;width: 100%; justify-content: center; margin-top: 50px">
+  <mat-card class="igi-home-card">
+    <mat-card-header class="igi-home-header">
+      <mat-card-title>My Sudoku Game</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <p>
+        Please select what kind of game you would like to play
+      </p>
+    </mat-card-content>
+    <mat-card-actions>
+      <div class="igi-home-actions-container">
+        <div>
+          <h4>Please type your user name</h4>
+          <mat-form-field>
+            <input matInput [(ngModel)]="user" placeholder="New usere name" />
+          </mat-form-field>
+          <h4>Please select dificalty</h4>
+          <mat-form-field>
+            <mat-label>Level of dificalty</mat-label>
+            <mat-select (selectionChange)="onDifficultyChange($event.value)">
+              @for (item of levels; track item) {
+              <mat-option [value]="item">{{item}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          If you lould like to play alone. Please click here:
+          <button mat-button (click)="navigateToSingleplayer()">Play alone</button>
+        </div>
+        <div>
+          For multiplayer game. Please click here:
+          <button mat-button (click)="navigateToMultiplayer()">Play with frends</button>
+        </div>
+
+      </div>
+    </mat-card-actions>
+  </mat-card>
+</div>

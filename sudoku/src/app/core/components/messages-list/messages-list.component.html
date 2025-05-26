@@ -1,0 +1,14 @@
+<div class="igi-messages-container">
+    <div class="igi-message-list">
+        <div *ngFor="let message of socket.messages()">
+            <mat-card>
+                <div class="igi-message-header">
+                    <span>{{ message.user }}</span>: <span class="timestamp">{{ message.time | date:'shortTime'}}</span>
+                </div>
+                <div class="igi-message-text">
+                    {{ message.text }}
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>
