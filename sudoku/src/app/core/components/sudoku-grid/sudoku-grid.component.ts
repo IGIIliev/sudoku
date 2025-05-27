@@ -8,6 +8,7 @@ import { SudokuCellModel } from '../../models/sudoku-cell.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StateService } from '../../state/state.service';
 import { SudokuStateModel } from '../../models/sudoku-state.model';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-sudoku-grid',
@@ -126,7 +127,7 @@ export class SudokuGridComponent {
   }
 
   private getBoard(difficulty: string): void {
-    this.sudocuService.getBoard(difficulty).subscribe(res => {
+    this.sudocuService.getBoard(difficulty).pipe(take(1)).subscribe(res => {
       if (this.isMultyplayer && this.socket.grid().length != 0) {
         this.board.set(this.socket.grid());
       }
