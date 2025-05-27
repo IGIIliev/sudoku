@@ -8,7 +8,6 @@ import { SudokuCellModel } from '../../models/sudoku-cell.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StateService } from '../../state/state.service';
 import { SudokuStateModel } from '../../models/sudoku-state.model';
-import { take } from 'rxjs';
 
 @Component({
   selector: 'app-sudoku-grid',
