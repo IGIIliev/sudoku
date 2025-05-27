@@ -6,10 +6,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { SudokuGridComponent } from "../sudoku-grid/sudoku-grid.component";
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SocketService } from '../../services/services/socket/socket.service';
 import { MessagesListComponent } from '../messages-list/messages-list.component';
 import { SudokuCellModel } from '../../models/sudoku-cell.model';
+import { SudokuStateModel } from '../../models/sudoku-state.model';
+import { StateService } from '../../state/state.service';
 
 @Component({
   selector: 'app-multiplayer',
@@ -22,23 +24,28 @@ export class MultiplayerComponent {
   newRoom = '';
   currentRoom = '';
   user: string | null = 'Default Name';
-  dificalty: string | null = null;
+  difficulty: string | null = null;
+  currentState: SudokuStateModel | null = null;
   isMultyplayer: boolean | null = false;
   blocks: SudokuCellModel[][] = [];
 
   constructor(
     public socket: SocketService,
-    private router: ActivatedRoute
+    private activeRoute: ActivatedRoute,
+    private router: Router,
+    private state: StateService
   ) {
-    this.user = this.router.snapshot.paramMap.get('name');
-    this.dificalty = this.router.snapshot.paramMap.get('dificalty');
-    this.isMultyplayer = this.router.snapshot.paramMap.get('isMultyplayer') === 'true';
-  }
+    this.currentState = this.state.getSudokuState;
+    
+    if(this.currentState == null) {
+      this.router.navigate(['/home']);
+    }
+    else {
+      this.user = this.currentState!.userName;
+      this.difficulty = this.currentState!.difficulty;
+    }
 
-  ngOnInit() {
-    this.user = this.router.snapshot.paramMap.get('name');
-    this.dificalty = this.router.snapshot.paramMap.get('dificalty');
-    this.isMultyplayer = this.router.snapshot.paramMap.get('isMultyplayer') === 'true';
+    this.isMultyplayer = this.activeRoute.snapshot.paramMap.get('isMultyplayer') === 'true';
   }
 
   createRoom() {

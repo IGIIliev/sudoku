@@ -1,4 +1,4 @@
-<div style="display: flex;width: 100%; justify-content: center; margin-top: 50px">
+<form [formGroup]="homeForm" style="display: flex;width: 100%; justify-content: center; margin-top: 50px">
   <mat-card class="igi-home-card">
     <mat-card-header class="igi-home-header">
       <mat-card-title>My Sudoku Game</mat-card-title>
@@ -14,28 +14,34 @@
         <div>
           <h4>Please type your user name</h4>
           <mat-form-field>
-            <input matInput [(ngModel)]="user" placeholder="New usere name" />
+            <input matInput placeholder="New usere name" formControlName="user"/>
+            <div *ngIf="homeForm.get('user')?.touched && homeForm.get('user')?.invalid" class="igi-form-error">
+              Name is required.
+            </div>
           </mat-form-field>
-          <h4>Please select dificalty</h4>
+          <h4>Please select difficulty</h4>
           <mat-form-field>
-            <mat-label>Level of dificalty</mat-label>
-            <mat-select (selectionChange)="onDifficultyChange($event.value)">
+            <mat-label>Level of difficulty</mat-label>
+            <mat-select formControlName="difficulty" [compareWith]="compareByCode">
               @for (item of levels; track item) {
               <mat-option [value]="item">{{item}}</mat-option>
               }
             </mat-select>
+            <div *ngIf="homeForm.get('difficulty')?.touched && homeForm.get('difficulty')?.invalid" class="igi-form-error">
+              Please select difficalty level;
+            </div>
           </mat-form-field>
         </div>
         <div>
           If you lould like to play alone. Please click here:
-          <button mat-button (click)="navigateToSingleplayer()">Play alone</button>
+          <button mat-button type="button" (click)="navigateToSingleplayer()">Play alone</button>
         </div>
         <div>
           For multiplayer game. Please click here:
-          <button mat-button (click)="navigateToMultiplayer()">Play with frends</button>
+          <button mat-button type="button" (click)="navigateToMultiplayer()">Play with frends</button>
         </div>
 
       </div>
     </mat-card-actions>
   </mat-card>
-</div>
+</form>
