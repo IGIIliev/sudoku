@@ -103,6 +103,7 @@ export class SudokuGridComponent {
   private blocksToBoard(blocks: number[][], initialGeneration: boolean = false): SudokuCellModel[][] {
     const board = Array.from({ length: 9 }, () => Array(9).fill(0));
 
+    if(blocks === undefined) {return [];}
     for (let blockIndex = 0; blockIndex < 9; blockIndex++) {
       const blockRow = Math.floor(blockIndex / 3);
       const blockCol = blockIndex % 3;
@@ -127,7 +128,7 @@ export class SudokuGridComponent {
   }
 
   private getBoard(difficulty: string): void {
-    this.sudocuService.getBoard(difficulty).pipe(take(1)).subscribe(res => {
+    this.sudocuService.getBoard(difficulty).subscribe(res => {
       if (this.isMultyplayer && this.socket.grid().length != 0) {
         this.board.set(this.socket.grid());
       }
@@ -135,6 +136,9 @@ export class SudokuGridComponent {
         this.board.set(res);
         this.currentState!.board = res;
         this.state.setSudokuState(this.currentState!);
+        if (this.isMultyplayer) {
+          this.socket.updateGrid(res, this.currentRoom!);
+        }
       }
     });
   }

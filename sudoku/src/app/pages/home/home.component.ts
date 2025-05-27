@@ -37,8 +37,6 @@ export class HomeComponent {
   currentState: SudokuStateModel | null = null;
   homeForm: FormGroup = new FormGroup({});
 
-  compareByCode = (a: any, b: any): boolean => a?.code === b?.code;
-
   constructor(
     private fb: FormBuilder,
     private router: Router,
