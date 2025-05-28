@@ -22,7 +22,7 @@
           <h4>Please select difficulty</h4>
           <mat-form-field>
             <mat-label>Level of difficulty</mat-label>
-            <mat-select formControlName="difficulty">
+            <mat-select [(value)]="selected" formControlName="difficulty">
               @for (item of levels; track item) {
               <mat-option [value]="item">{{item}}</mat-option>
               }

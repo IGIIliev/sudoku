@@ -37,13 +37,22 @@ export class HomeComponent {
   currentState: SudokuStateModel | null = null;
   homeForm: FormGroup = new FormGroup({});
 
+  selected = '';
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private state: StateService
   ) {
-    this.initializeForm();
     this.currentState = this.state.getSudokuState;
+
+    this.initializeForm();
+    
+    if(this.currentState) {
+      this.homeForm.controls['user'].setValue(this.currentState!.userName);
+      this.homeForm.controls['difficulty'].setValue({code: this.currentState!.difficulty});
+      this.selected = this.currentState.difficulty!;
+    } 
 
     this.homeForm.get('user')?.valueChanges.subscribe(value => {
       this.user = value;
@@ -52,7 +61,8 @@ export class HomeComponent {
         difficulty: this.selectedDifficulty,
         board: []
       }
-      this.state.setSudokuState(this.currentState);
+      this.selected = this.selectedDifficulty!;
+      this.state.setSudokuState(this.currentState); 
     });
 
     this.homeForm.get('difficulty')?.valueChanges.subscribe(value => {
@@ -64,15 +74,10 @@ export class HomeComponent {
       }
       this.state.setSudokuState(this.currentState);
     });
-
-    if(this.currentState) {
-        this.homeForm.controls['user'].setValue(this.currentState!.userName);
-        this.homeForm.controls['difficulty'].setValue({code: this.currentState!.difficulty});
-      } 
   }
 
   navigateToSingleplayer() {
-    if (this.homeForm.valid) {
+    if (this.homeForm.valid && this.selected != '') {
       this.router.navigate(['/single-player', { isMultyplayer: false }]);
     } else {
       this.homeForm.markAllAsTouched(); // To show errors
@@ -80,7 +85,7 @@ export class HomeComponent {
   }
 
   navigateToMultiplayer() {
-    if (this.homeForm.valid) {
+    if (this.homeForm.valid && this.selected != '') {
       this.router.navigate(['/multiplayer', { isMultyplayer: true }]);
     } else {
       this.homeForm.markAllAsTouched(); // To show errors
@@ -99,8 +104,8 @@ export class HomeComponent {
 
   private initializeForm(): void {
     this.homeForm = this.fb.group({
-      user: ['', Validators.required],
-      difficulty: ['', Validators.required]
+      user: [null, Validators.required],
+      difficulty: [null, Validators.required]
     });
   }
 }

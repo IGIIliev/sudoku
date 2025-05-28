@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {  Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import * as complexityEnum from '../../models/enums/complexityLevel.enum';
 import { SudokuGridModel } from '../../models/sudoku-grid-model';
 
