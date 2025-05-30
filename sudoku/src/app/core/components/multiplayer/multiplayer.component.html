@@ -27,7 +27,7 @@
     <div *ngIf="socket.checkForRoom(currentRoom)" class="igi-multiplayer-room-area">
 
         <div class="igi-multiplayer-sudoku-area">
-            <app-sudoku-grid [board]="socket.grid()" [currentRoom]="currentRoom" (gridGenerated)="loadGrid($event)" />
+            <app-sudoku-grid [board]="board()" [currentRoom]="currentRoom" (cellValueChanged)="cellChanged($event)"/>
         </div>
         <div class="igi-multiplayer-messages-area">
 
@@ -43,3 +43,5 @@
         </div>
     </div>
 </div>
+
+{{socket.grid().board | json}}

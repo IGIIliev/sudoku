@@ -5,9 +5,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { SudocuService } from '../../services/services/sudocu.service';
 import { SocketService } from '../../services/services/socket/socket.service';
 import { SudokuCellModel } from '../../models/sudoku-cell.model';
-import { ActivatedRoute, Router } from '@angular/router';
 import { StateService } from '../../state/state.service';
 import { SudokuStateModel } from '../../models/sudoku-state.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sudoku-grid',
@@ -18,20 +18,18 @@ import { SudokuStateModel } from '../../models/sudoku-state.model';
 export class SudokuGridComponent {
   board = model<any | null>([]);
   @Input() currentRoom: string | null = '';
-  @Output() gridGenerated = new EventEmitter<any>();
-
+  @Input() isMultiplayer: boolean = false;
+  @Output() cellValueChanged = new EventEmitter<any>();
   solution: any;
 
   user: string | null = '';
   difficulty: string | null = null;
-  isMultyplayer: boolean | null = false;
   currentState: SudokuStateModel | null = null;
   blocks: SudokuCellModel[][] = [];
 
   constructor(
     public socket: SocketService,
     private sudocuService: SudocuService,
-    private activeRouter: ActivatedRoute,
     private router: Router,
     private state: StateService
   ) { 
@@ -45,25 +43,20 @@ export class SudokuGridComponent {
       this.difficulty = this.currentState.difficulty;
 
       if(this.currentState.board != null) {
-        this.board.set(this.currentState.board)
+        this.board.set(this.currentState!.board);
+
       }
     }
   }
 
   ngOnChanges() {
-    // check if we ar in multiplayer mode and set socket data to the grid
-    if (this.isMultyplayer) {
-      this.board.set(this.socket.grid());
-      this.generateSudokuData(this.socket.grid().length == 0 ? true : false);
+    if(this.board()) {
+      this.blocks = this.blocksToBoard(this.board().board, true); 
     }
   }
 
   ngOnInit(): void {    
-    this.isMultyplayer = this.activeRouter.snapshot.paramMap.get('isMultyplayer') === 'true';
-
-    if(!this.isMultyplayer && this.state.getSudokuState) {
-      console.log(this.state.getSudokuState)
-    }
+    console.log(1231, this.board)
   }
 
   cellChanged(event: SudokuCellModel): void {
@@ -71,19 +64,9 @@ export class SudokuGridComponent {
       x.board[event.oldCoordinates.x][event.oldCoordinates.y] = event.value;
       return x;
     });
-
-    if (this.isMultyplayer) {
-      this.gridGenerated.emit(this.board());
-    }
-    else {
-      this.currentState!.board = this.board();
-      this.state.setSudokuState(this.currentState!);
-    }
-  }
-
-  generateSudokuData(initialGeneration: boolean = false): void {
-    this.getBoard(this.difficulty!)
-    this.blocks = this.blocksToBoard(this.board().board, initialGeneration);
+    this.currentState!.board = this.board();
+    this.state.setSudokuState(this.currentState!);
+    this.cellValueChanged.emit(this.board());
   }
 
   validate(): void {
@@ -125,21 +108,4 @@ export class SudokuGridComponent {
 
     return board;
   }
-
-  private getBoard(difficulty: string): void {
-    this.sudocuService.getBoard(difficulty).subscribe(res => {
-      if (this.isMultyplayer && this.socket.grid().length != 0) {
-        this.board.set(this.socket.grid());
-      }
-      else {
-        this.board.set(res);
-        this.currentState!.board = res;
-        this.state.setSudokuState(this.currentState!);
-        if (this.isMultyplayer) {
-          this.socket.updateGrid(res, this.currentRoom!);
-        }
-      }
-    });
-  }
-
 }

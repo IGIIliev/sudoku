@@ -1,13 +1,4 @@
-<!-- <app-sudoku-blocks-align [sudokuBlocks]="board().board" /> -->
 <div class="igi-sudoku-grid-container">
-    @if(blocks.length == 0) {
-    <div>
-        <h4>Click to generate game:
-            <button mat-button (click)="generateSudokuData(true)">Generate</button>
-        </h4>
-    </div>
-    }
-    @if(blocks.length > 0) {
     <h4>Sudoku</h4>
     <div class="igi-sudoku-grid">
         <div *ngFor="let row of blocks; let rowIndex = index" class="igi-sudoku-grid-row">
@@ -26,7 +17,4 @@
             <button mat-button (click)="solve()">Solve</button>
         </div>
     </div>
-    }
 </div>
-
-<pre>{{solution | json}}</pre>

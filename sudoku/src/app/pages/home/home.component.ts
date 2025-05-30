@@ -78,7 +78,7 @@ export class HomeComponent {
 
   navigateToSingleplayer() {
     if (this.homeForm.valid && this.selected != '') {
-      this.router.navigate(['/single-player', { isMultyplayer: false }]);
+      this.router.navigate(['/single-player', { difficulty: this.selectedDifficulty }]);
     } else {
       this.homeForm.markAllAsTouched(); // To show errors
     }
@@ -86,7 +86,7 @@ export class HomeComponent {
 
   navigateToMultiplayer() {
     if (this.homeForm.valid && this.selected != '') {
-      this.router.navigate(['/multiplayer', { isMultyplayer: true }]);
+      this.router.navigate(['/multiplayer', { difficulty: this.selectedDifficulty }]);
     } else {
       this.homeForm.markAllAsTouched(); // To show errors
     }

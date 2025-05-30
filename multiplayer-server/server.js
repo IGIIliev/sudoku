@@ -25,14 +25,16 @@ io.on('connection', (socket) => {
   });
 
   // Create a new room
-  socket.on('createRoom', room => {
-    console.log(room)
+  socket.on('createRoom', (room) => {
+    console.log("new room: ", room)
     if (!rooms.has(room)) {
       rooms.add(room);
       messagesHistory[room] = [];
       gridHistory[room] = [];
       io.emit('roomsList', Array.from(rooms)); // notify all clients
     }
+
+    socket.emit('gridHistory', gridHistory[room] || []);
   });
 
   // Remove existing room
@@ -47,9 +49,10 @@ io.on('connection', (socket) => {
   });
 
   // Join to a room
-  socket.on('joinRoom', room => {
+  socket.on('joinRoom', (room) => {
     socket.join(room);
     console.log(`User joined room: ${room}`);
+    // console.log("grid[room]: ", gridHistory[room]);
 
     socket.emit('messagesHistory', messagesHistory[room] || []);
     socket.emit('gridHistory', gridHistory[room] || []);
@@ -69,14 +72,13 @@ io.on('connection', (socket) => {
   socket.on('grid', ({ gridData, room }) => {
     const grid = gridData;
 
+    console.log(11, room, gridData)
+
     // Save grid to room history
-    // if (!gridHistory[room]) gridHistory[room] = [];
-    // gridHistory[room].push(gridData);
-
-
     gridHistory[room] = [];
     gridHistory[room] = gridData;
 
+    // console.log("grid: ", grid);
 
     // Send to others in room
     io.to(room).emit('grid', grid);

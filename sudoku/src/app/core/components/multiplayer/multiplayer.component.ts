@@ -12,6 +12,7 @@ import { MessagesListComponent } from '../messages-list/messages-list.component'
 import { SudokuCellModel } from '../../models/sudoku-cell.model';
 import { SudokuStateModel } from '../../models/sudoku-state.model';
 import { StateService } from '../../state/state.service';
+import { SudocuService } from '../../services/services/sudocu.service';
 
 @Component({
   selector: 'app-multiplayer',
@@ -20,23 +21,23 @@ import { StateService } from '../../state/state.service';
   styleUrl: './multiplayer.component.scss'
 })
 export class MultiplayerComponent {
+  @Input() difficulty: string | null = null;
+  board = model<any | null>([]);
+  currentState: SudokuStateModel | null = null;
   textMessage = '';
   newRoom = '';
   currentRoom = '';
   user: string | null = 'Default Name';
-  difficulty: string | null = null;
-  currentState: SudokuStateModel | null = null;
-  isMultyplayer: boolean | null = false;
   blocks: SudokuCellModel[][] = [];
 
   constructor(
     public socket: SocketService,
-    private activeRoute: ActivatedRoute,
+    private sudocuService: SudocuService,
     private router: Router,
     private state: StateService
   ) {
     this.currentState = this.state.getSudokuState;
-    
+
     if(this.currentState == null) {
       this.router.navigate(['/home']);
     }
@@ -44,13 +45,12 @@ export class MultiplayerComponent {
       this.user = this.currentState!.userName;
       this.difficulty = this.currentState!.difficulty;
     }
-
-    this.isMultyplayer = this.activeRoute.snapshot.paramMap.get('isMultyplayer') === 'true';
   }
 
   createRoom() {
     if (this.newRoom.trim()) {
       this.socket.createRoom(this.newRoom.trim());
+      this.getBoard(this.difficulty, this.newRoom.trim());
       this.newRoom = '';
     }
   }
@@ -62,7 +62,8 @@ export class MultiplayerComponent {
 
   join(room: string) {
     this.currentRoom = room;
-    this.socket.joinRoom(room);
+    this.socket.joinRoom(room);   
+    this.board.set(this.socket.grid());
   }
 
   sendMessage() {
@@ -72,7 +73,17 @@ export class MultiplayerComponent {
     }
   }
 
-  loadGrid(event: any): void {
-    this.socket.updateGrid(event, this.currentRoom)
+  cellChanged(board: any): void {
+    this.socket.updateGrid(board, this.currentRoom);
+    this.board.set(board);
+  }
+
+  private getBoard(difficulty: string | null, newRoom: string = ''): void {
+    this.sudocuService.getBoard(difficulty!).subscribe(res => { 
+      this.board.set(res);
+      this.currentState!.board = res;
+      this.state.setSudokuState(this.currentState!);
+      this.socket.updateGrid(res, newRoom);
+    });
   }
 }

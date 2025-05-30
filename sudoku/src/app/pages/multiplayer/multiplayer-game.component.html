@@ -1,2 +1,2 @@
-<button mat-button (click)="navigateHome()">Home</button>
-<app-multiplayer/>
+<button mat-button (click)="navigateHome()" (cellValueChanged)="cellChanged($event)">Home</button>
+<app-multiplayer [difficulty]="difficulty" (cellValueChanged)="cellChanged($event)"/>
